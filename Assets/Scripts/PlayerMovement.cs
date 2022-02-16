@@ -22,25 +22,25 @@ public class PlayerMovement : MonoBehaviour
         Vector3 pos = transform.position;
 
         
-        if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y >= Screen.height - BordureEpaisseur)
+        if (Input.GetKey(KeyCode.UpArrow)) // || Input.mousePosition.y >= Screen.height - BordureEpaisseur)
         {
             pos.y += viewerSpeed * Time.deltaTime;
 
         }
 
-        if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y <= BordureEpaisseur)
+        if (Input.GetKey(KeyCode.DownArrow)) // || Input.mousePosition.y <= BordureEpaisseur)
         {
             pos.y -= viewerSpeed * Time.deltaTime;
 
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow)  || Input.mousePosition.x <= BordureEpaisseur)
+        if (Input.GetKey(KeyCode.LeftArrow)) //  || Input.mousePosition.x <= BordureEpaisseur)
         {
             pos.x -= viewerSpeed * Time.deltaTime;
 
         }
 
-        if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x >= Screen.width - BordureEpaisseur)
+        if (Input.GetKey(KeyCode.RightArrow)) // || Input.mousePosition.x >= Screen.width - BordureEpaisseur)
         {
             pos.x += viewerSpeed * Time.deltaTime;
 
