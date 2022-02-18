@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5476a7ca95c661c4cbca18f7157d8765
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - TileCore: {fileID: 8856457625664595361, guid: 463624806d0fe654ead31ced57fee6b2, type: 3}
+  - tilemap: {instanceID: 0}
+  - grid: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

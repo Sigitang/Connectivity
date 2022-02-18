@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class TileController : MonoBehaviour
+public class TileCoreSpawner : MonoBehaviour
 {
     public GameObject TileCore;
     private BoundsInt etenduTiles;
@@ -21,10 +21,11 @@ public class TileController : MonoBehaviour
         {
             Vector3 worldPos = tilemap.GetCellCenterWorld(position);
            
-            Debug.Log(worldPos);
+            
         
             var newPrefab = Instantiate(TileCore, worldPos, Quaternion.identity);
             newPrefab.name = ("TileCore"+worldPos);
+            newPrefab.AddComponent(typeof(TileCoreControl));
         }
         
                 

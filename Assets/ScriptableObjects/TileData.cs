@@ -7,11 +7,11 @@ using UnityEngine.Tilemaps;
 
 public class TileData : ScriptableObject
 {
-    public TileBase[] tiles;
+    
 
-    // Liste des variables définies par type de tile
-    public float waterDepth, vegetationDensity; 
-    public bool  waterPresence, pollutionPresence;
+    public TileBase[] tiles; //assigne le nom tile a toutes les tiles
 
+    public float waterDepth, vegetationDensity;
+    public bool waterPresence, pollutionPresence;
 
 }

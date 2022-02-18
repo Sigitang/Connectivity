@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FrichePollueeTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 033ab5d0e71866c44a42ec17e6afa8fe, type: 2}
+  - {fileID: 11400000, guid: a96cedf1394060f488bfc4f9d202b35b, type: 2}
   waterDepth: 0
   vegetationDensity: 0
   waterPresence: 0

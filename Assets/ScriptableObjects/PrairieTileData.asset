@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PrairieTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: a96cedf1394060f488bfc4f9d202b35b, type: 2}
-  waterDepth: 0
+  - {fileID: 11400000, guid: 28281fe42082eff4eb276f0277c34b44, type: 2}
+  - {fileID: 11400000, guid: 033ab5d0e71866c44a42ec17e6afa8fe, type: 2}
+  waterDepth: 1
   vegetationDensity: 1
   waterPresence: 0
   pollutionPresence: 0
