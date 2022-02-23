@@ -26,7 +26,7 @@ public class TileCoreControl : MonoBehaviour
         else
         {
             waterDepth = mapManager.GetTilewaterDepth(transform.position);
-            print(waterDepth);
+            
         }
     }
 

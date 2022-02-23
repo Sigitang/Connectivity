@@ -14,7 +14,7 @@ public abstract class TimeDependent : MonoBehaviour //abstract --> Ne peut pas i
 
     }
 
-    public virtual void OnTick() //Virtual = peut etre override
+    public virtual void OnTick(int deltaDiscreteTime) //Virtual = peut etre override
     {
         
 

@@ -7,10 +7,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-
-    public int gameTime;
+    public int discreteTime;
+    public int deltaDiscreteTime = 2; //cout en temps a recolter
     List<TimeDependent> timeDependentList;
-    public int timeCost; // A coder : cout en temps
+    
 
     GameManager() //Constructeur de la classe = premier truc appele lors de la creation de l'objet 1ere priorite
     {
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        gameTime = 0;
+        discreteTime = 0;
         
     }
 
@@ -37,13 +37,13 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1")) // jouer une carte
         { 
-             gameTime = gameTime + timeCost;
+             discreteTime =+ deltaDiscreteTime;
  
              foreach (TimeDependent timeDependent in timeDependentList)
              {
-                timeDependent.OnTick();
+                timeDependent.OnTick(deltaDiscreteTime);
 
              }
         }
