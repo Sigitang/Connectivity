@@ -32,7 +32,7 @@ public class PopulationEvolution : TimeDependent
         while(limite < deltaDiscreteTime)
         {
 
-            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1- nIndiv / capaciteMax))) + immigration + emmigration;
+            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1- nIndiv / capaciteMax))) + immigration + emmigration; //run 1xformule evolution pop pour chaque deltaTime passé
             
             print("N+1");
 
@@ -50,10 +50,10 @@ public class PopulationEvolution : TimeDependent
 
         limite = 1;
 
-        while(limite < nIndiv)
+        while(limite < nIndiv/10)
         {
-            
-            var newPrefab = Instantiate(SonneurBig, transform.position+posModif, Quaternion.identity); // Spawn au même endroit...
+            Vector3 randomPos = new Vector3(Random.Range(-0.1f,0.1f), Random.Range(-0.1f, 0.1f),0);
+            var newPrefab = Instantiate(SonneurBig, transform.position+randomPos, Quaternion.identity); // Spawn au même endroit...
             limite++;
         }
 
