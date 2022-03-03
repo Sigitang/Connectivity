@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     public int discreteTime;
     public int deltaDiscreteTime = 2; //cout en temps a recolter
-    List<TimeDependent> timeDependentList;
+    readonly List<TimeDependent> timeDependentList;
     
 
     GameManager() //Constructeur de la classe = premier truc appele lors de la creation de l'objet 1ere priorite
@@ -20,13 +20,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        discreteTime = 0;
+        discreteTime = 0; //time = 0 au debut du jeu
         
     }
 
     
 
-    public void RegisterTimeDependant(TimeDependent timeDependent)
+    public void RegisterTimeDependant(TimeDependent timeDependent) //register a time dependent object to a list
     {
         timeDependentList.Add(timeDependent);
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) // jouer une carte
+        if (Input.GetButtonDown("Jump")) // Quand clique souris alors faire passer le temps de deltaDiscreteTime et OnTick() chaque objet de timeDependent
         { 
              discreteTime =+ deltaDiscreteTime;
  
