@@ -24,14 +24,14 @@ public class TileCoreSpawner : MonoBehaviour
             
         
             var newPrefab = Instantiate(TileCore, worldPos, Quaternion.identity);
-            newPrefab.name = ("TileCore"+worldPos);
+            newPrefab.name = ("TileCore"+tilemap.WorldToCell(worldPos));
             newPrefab.AddComponent(typeof(TileCoreControl));
             newPrefab.AddComponent(typeof(PopulationEvolution));
         }
         
                 
 
-
+        
 
                 //tilemap.CompressBounds();
 
