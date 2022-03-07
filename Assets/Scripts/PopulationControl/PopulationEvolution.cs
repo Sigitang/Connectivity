@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 
 public class PopulationEvolution : TimeDependent
 {
 
-    public float nIndiv = 0; // Nombre d'individus
+    public float nIndiv = 10; // Nombre d'individus
     public float tauxReproduction = 2; // a noter ailleurs ? Taux de reproduction
     public float capaciteMax = 100; //Capacite max
     private float immigration = 0;
     private float emmigration = 0;
     public Object prefabIndiv;
+    private float deltaPrefabIndiv = 0;
+    public Tilemap map ;
 
 
 
@@ -21,7 +24,7 @@ public class PopulationEvolution : TimeDependent
     // Start is called before the first frame update
     protected override void Start()
     {
-        
+        map = FindObjectOfType<Tilemap>();
         base.Start(); //Call le start de la classe parente
         
     }
@@ -65,10 +68,27 @@ public class PopulationEvolution : TimeDependent
 
 
         //Spawn de sprites Sonneur
+
+        Vector3 corePosition = map.WorldToCell(this.transform.position);
         var gameObjects = GameObject.FindGameObjectsWithTag("IndivSprite"); //cherche les objets avec le tag IndivSprite et les supprime A CHANGER CAR SUPPRIME SUR TOUS LES TILE CORES
+
+        deltaPrefabIndiv = gameObjects.Length;
+
         foreach(GameObject obj in gameObjects)
         {
-           Object.Destroy(obj); 
+            Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<RectTransform>().position);
+            
+            
+            
+
+            if (spriteTransform == corePosition )
+            {
+                Debug.Log("suppr");
+                Object.Destroy(obj);
+
+            }
+            
+            
 
         }
 
