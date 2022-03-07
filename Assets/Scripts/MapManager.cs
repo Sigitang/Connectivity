@@ -39,22 +39,7 @@ public class MapManager : MonoBehaviour
        
     }
 
-    //private void Update()
-    //{
-     // if (Input.GetMouseButtonDown(0))
-     //{
-    //Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    // Vector3Int gridPosition = map.WorldToCell(mousePosition);
-
-    //TileBase clickedTile = map.GetTile(gridPosition);
-    //float waterDepth = dataFromTiles[clickedTile].waterDepth;
-
-   // print("Water Depth on" + gridPosition + "is" + waterDepth);
-
-
-   // }
-
-   // }
+   
 
     public float GetTilewaterDepth(Vector2 worldPosition)
     {
@@ -65,12 +50,24 @@ public class MapManager : MonoBehaviour
 
             float waterDepth = dataFromTiles[tile].waterDepth;
             return waterDepth;
+
+    }
+
+    public string GetTileName(Vector2 worldPosition)
+
+    {
         
+        Vector3Int gridPosition = map.WorldToCell(worldPosition); // Conversion world position to grid position
+        TileBase tile = map.GetTile(gridPosition);
+        if(tile == null) 
+        {
+            return "Null";
+        }
+        else
+        {
+            string tileName = tile.name.ToString(); //extrait le nom de la tile
+            return tileName;
 
-
-
-        
-
-
+        }
     }
 }

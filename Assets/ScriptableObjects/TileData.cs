@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 [CreateAssetMenu]
 
-public class TileData : ScriptableObject
+public class TileData : ScriptableObject //Scriptable object stocke donnée de tuile
 {
     
 

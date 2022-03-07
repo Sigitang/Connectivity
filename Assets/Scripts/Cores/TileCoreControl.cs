@@ -5,14 +5,14 @@ using UnityEngine.Tilemaps;
 
 public class TileCoreControl : MonoBehaviour
 {
-    private MapManager mapManager;
-    private float waterDepth;
+    //private MapManager mapManager;
+    //private float waterDepth;
     private Tilemap map;
     
 
     private void Start()
     {
-        mapManager = FindObjectOfType<MapManager>();
+        //mapManager = FindObjectOfType<MapManager>();
         map = FindObjectOfType<Tilemap>();
 
         Vector3Int gridPosition = map.WorldToCell(transform.position);
@@ -25,18 +25,12 @@ public class TileCoreControl : MonoBehaviour
         }
         else
         {
-            waterDepth = mapManager.GetTilewaterDepth(transform.position);
+           // waterDepth = mapManager.GetTilewaterDepth(transform.position);
+            
             
         }
     }
 
-    private void Update()
-    {
-        
-        
-
-
-
-    }
+    
 
 }
