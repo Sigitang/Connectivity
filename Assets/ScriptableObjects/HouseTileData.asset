@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HouseTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 2e5f995dac412cf4890093eb28b2bc6d, type: 2}
+  - {fileID: 11400000, guid: 678260ff91f500b4da17241914017a36, type: 2}
   waterDepth: 0
   vegetationDensity: 1
   waterPresence: 0

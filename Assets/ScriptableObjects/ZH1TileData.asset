@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ZH1TileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 6a93f4073c7a66340b9be6c7e0bd19aa, type: 2}
+  - {fileID: 11400000, guid: 504940caad695f243babc4a2a743aee7, type: 2}
   waterDepth: 5
   vegetationDensity: 1
   waterPresence: 1

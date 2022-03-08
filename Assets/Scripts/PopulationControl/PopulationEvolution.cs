@@ -7,14 +7,15 @@ using UnityEngine.Tilemaps;
 public class PopulationEvolution : TimeDependent
 {
 
-    public float nIndiv = 10; // Nombre d'individus
+    public float nIndiv = 0; // Nombre d'individus
     public float tauxReproduction = 2; // a noter ailleurs ? Taux de reproduction
     public float capaciteMax = 100; //Capacite max
     private float immigration = 0;
     private float emmigration = 0;
     public Object prefabIndiv;
     private float deltaPrefabIndiv = 0;
-    public Tilemap map ;
+    public Tilemap map;
+
 
 
 
@@ -25,6 +26,7 @@ public class PopulationEvolution : TimeDependent
     protected override void Start()
     {
         map = FindObjectOfType<Tilemap>();
+        
         base.Start(); //Call le start de la classe parente
         
     }
@@ -41,8 +43,8 @@ public class PopulationEvolution : TimeDependent
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
 
-        
-        
+
+
         int limite = 1;
         //N+1=N*e(r(1-N/K))+i+e
         while(limite < deltaDiscreteTime)
@@ -102,9 +104,10 @@ public class PopulationEvolution : TimeDependent
             limite++;
         }
 
+        }
 
 
-    }
+    
 
     
     
