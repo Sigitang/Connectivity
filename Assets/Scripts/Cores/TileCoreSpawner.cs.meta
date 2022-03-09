@@ -7,7 +7,7 @@ MonoImporter:
   - TileCore: {fileID: 8856457625664595361, guid: 463624806d0fe654ead31ced57fee6b2, type: 3}
   - tilemap: {instanceID: 0}
   - grid: {instanceID: 0}
-  executionOrder: 0
+  executionOrder: -20
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

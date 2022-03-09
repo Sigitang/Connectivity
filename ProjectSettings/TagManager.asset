@@ -6,6 +6,8 @@ TagManager:
   tags:
   - IndivSprite
   - Tool
+  - seed
+  - Tilecore
   layers:
   - Default
   - TransparentFX

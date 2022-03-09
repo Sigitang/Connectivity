@@ -6,6 +6,11 @@ public class PopulationSpawnSeed : MonoBehaviour
 {
     public float nIndivStart;
 
+    public void Start()
+    {
+        nIndivStart = 10;
+    }
+    
     
     
 }
