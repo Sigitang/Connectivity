@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
 
     public int discreteTime;
-    public int deltaDiscreteTime = 2; //cout en temps a recolter
+    public int deltaDiscreteTime = 1; //cout en temps a recolter
     readonly List<TimeDependent> timeDependentList;
     
 
@@ -32,8 +32,25 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void ChangeDeltaDiscreteTime()
+    {
+        
+ 
 
+    }
 
+    public void LaunchOnTick()
+    {
+
+        discreteTime = +deltaDiscreteTime;
+
+        foreach (TimeDependent timeDependent in timeDependentList)
+        {
+            timeDependent.OnTick(deltaDiscreteTime);
+
+        }
+
+    }
     
     void Update()
     {

@@ -6,17 +6,20 @@ using UnityEngine.Tilemaps;
 
 public class PopulationEvolution : TimeDependent
 {
-
-    public float nIndiv = 0; // Nombre d'individus
+    [SerializeField]
+    private float nIndiv = 0; // Nombre d'individus
     public float tauxReproduction = 2; // a noter ailleurs ? Taux de reproduction
     public float capaciteMax = 100; //Capacite max
-    private float immigration = 0;
-    public float emmigration = 0;
+
+    [SerializeField]
+    private float immigration = 0f;
+
+    public float emmigration = 0f;
     public Object prefabIndiv;
     public Tilemap map;
     private GameObject[] localSeeds;
     private GameObject[] cores;
-    public List<GameObject> coresVoisins = new List<GameObject>();
+    private List<GameObject> coresVoisins = new List<GameObject>();
 
 
 
@@ -47,39 +50,7 @@ public class PopulationEvolution : TimeDependent
         }
 
 
-        cores = GameObject.FindGameObjectsWithTag("Tilecore"); //Cherche tous les cores
-        
-        
-        foreach (GameObject obj in cores) // Importe les cores des grilles environnantes // coresVoisins --> [NW,SE,NE,SW]          // A TRANSFORMER EN METHODE
-        {
-
-            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(0, 1, 0)) //NW
-            {
-                
-                coresVoisins.Add(obj);
-            }
-
-            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(0, -1, 0)) //SE
-            {
-                
-                coresVoisins.Add(obj);
-            }
-
-            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(1, 0, 0)) //NE
-            {
-                
-                coresVoisins.Add(obj);
-            }
-
-            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(-1, 0, 0)) //SW
-            {
-                
-                coresVoisins.Add(obj);
-            }
-
-            
-            
-        }
+       
 
 
 
@@ -89,21 +60,70 @@ public class PopulationEvolution : TimeDependent
     public void Awake()
     {
         prefabIndiv = Resources.Load("Prefabs/SonneurBigIndiv"); //va chercher le prefab sonneur
-        
+
+
 
         
-
 
     }
 
 
+    private float GetImmigration(List<GameObject> voisins) //va chercher la variable emmigration des tuiles voisines
+    {
+        float immi = 0;
+        foreach(GameObject obj in voisins)
+        {
 
-    
+            immi += obj.GetComponent<PopulationEvolution>().emmigration;
+            
+        }
+       
+        return immi;
+      
+
+    }
+
+    //private List<GameObject> GetVoisins(GameObject[] voisinous) 
+    //{
+    //    cores = GameObject.FindGameObjectsWithTag("Tilecore"); //Cherche tous les cores
+   // }
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
-        
 
-        
+        cores = GameObject.FindGameObjectsWithTag("Tilecore"); //Cherche tous les cores
+        coresVoisins = new List<GameObject>();
+
+        foreach (GameObject obj in cores) // Importe les cores des grilles environnantes // coresVoisins --> [NW,SE,NE,SW]          // A TRANSFORMER EN METHODE
+        {
+
+            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(-1, 0, 0)) //NW
+            {
+
+                coresVoisins.Add(obj);
+            }
+            
+            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(0, -1, 0)) //SE
+            {
+
+                coresVoisins.Add(obj);
+            }
+            
+            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(1, 0, 0)) //NE
+            {
+
+                    coresVoisins.Add(obj);
+            }
+           
+            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position) + new Vector3Int(0, 1, 0)) //SW
+            {
+
+                    coresVoisins.Add(obj);
+            }
+            
+
+
+        }
+
 
 
         int limite = 1;
@@ -119,8 +139,8 @@ public class PopulationEvolution : TimeDependent
             }
 
             //immigration
-            immigration = coresVoisins[1].GetComponent<PopulationEvolution>().emmigration + coresVoisins[2].GetComponent<PopulationEvolution>().emmigration
-             + coresVoisins[3].GetComponent<PopulationEvolution>().emmigration + coresVoisins[4].GetComponent<PopulationEvolution>().emmigration;
+
+            immigration = GetImmigration(coresVoisins);
 
 
 
@@ -128,8 +148,11 @@ public class PopulationEvolution : TimeDependent
 
 
 
-            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration; //run 1xformule evolution pop pour chaque deltaTime passé
+            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passé
+            
             limite++;
+
+
         }
 
 

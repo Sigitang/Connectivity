@@ -7,7 +7,9 @@ public class GameEvents : MonoBehaviour
 {
     public UnityEvent chainsawButtonTrigger;
     public GameObject chainsaw;
+    public UnityEvent chainsawUsed;
     public bool toolActivated;
+    
     
 
     private void Start()
@@ -17,16 +19,11 @@ public class GameEvents : MonoBehaviour
 
         chainsawButtonTrigger.AddListener(ToolActivated);
         chainsawButtonTrigger.AddListener(ActivateChainsaw);
-        
+
+     
 
     }
 
-    public void Update()
-    {
-  
-        
-
-    }
 
     public void ChainSawButton()
     {
