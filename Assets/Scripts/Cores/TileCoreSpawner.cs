@@ -13,7 +13,7 @@ public class TileCoreSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        GameObject parent = GameObject.Find("Cores");
 
         BoundsInt bounds = tilemap.cellBounds;
 
@@ -27,6 +27,7 @@ public class TileCoreSpawner : MonoBehaviour
             newPrefab.name = ("TileCore"+tilemap.WorldToCell(worldPos));
             newPrefab.AddComponent(typeof(TileCoreControl));
             newPrefab.AddComponent(typeof(PopulationEvolution));
+            newPrefab.transform.parent = parent.transform;
         }
         
                 

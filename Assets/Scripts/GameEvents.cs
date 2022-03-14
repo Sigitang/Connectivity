@@ -5,22 +5,33 @@ using UnityEngine.Events;
 
 public class GameEvents : MonoBehaviour
 {
+    public static GameEvents current;
     public UnityEvent chainsawButtonTrigger;
     public GameObject chainsaw;
     public UnityEvent chainsawUsed;
     public bool toolActivated;
-    
+
+
+    private void Awake()
+    {
+        current = this;
+    }
+
     
 
     private void Start()
     {
-        
+
+       
+
         toolActivated = false;
 
-        chainsawButtonTrigger.AddListener(ToolActivated);
+        chainsawButtonTrigger.AddListener(ToolActivated); 
         chainsawButtonTrigger.AddListener(ActivateChainsaw);
+        chainsawUsed.AddListener(ActivateChainsaw);
+        
 
-     
+
 
     }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.Events;
+
 
 
 public class ChainsawController : MonoBehaviour
@@ -45,7 +45,8 @@ public class ChainsawController : MonoBehaviour
 
                  TileBase newTile = empty;
                  map.SetTile(gridPosition, null);
-                 map.SetTile(gridPosition, newTile); 
+                 map.SetTile(gridPosition, newTile);
+                 GameEvents.current.chainsawUsed.Invoke();
                  
                
 

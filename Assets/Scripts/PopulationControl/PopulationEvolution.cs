@@ -189,7 +189,7 @@ public class PopulationEvolution : TimeDependent
         {
             Vector3 randomPos = new Vector3(Random.Range(-0.1f,0.1f), Random.Range(-0.1f, 0.1f),0); // spawn autour du core sur la tile
             
-            Instantiate(prefabIndiv, transform.position+randomPos, Quaternion.identity); 
+            Instantiate(prefabIndiv, transform.position+randomPos, Quaternion.identity, GameObject.Find("Units").transform); 
             limite++;
         }
 
