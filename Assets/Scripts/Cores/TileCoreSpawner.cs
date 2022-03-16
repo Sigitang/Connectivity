@@ -6,7 +6,6 @@ using UnityEngine.Tilemaps;
 public class TileCoreSpawner : MonoBehaviour
 {
     public GameObject TileCore;
-    private BoundsInt etenduTiles;
     public Tilemap tilemap;
     public Grid grid;
 

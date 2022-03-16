@@ -10,11 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a26e41e5514e8a54ea1c85993b121353, type: 3}
-  m_Name: HouseTileData
+  m_Name: WaterTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 678260ff91f500b4da17241914017a36, type: 2}
-  waterDepth: 0
-  vegetationDensity: 1
-  waterPresence: 0
-  pollutionPresence: 1
+  - {fileID: 11400000, guid: 00707f3bb6dd7cd43b962db78eaecec5, type: 2}
+  Kmax: 0
+  immigrationPossible: 0

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a26e41e5514e8a54ea1c85993b121353, type: 3}
-  m_Name: ForestTileData
+  m_Name: AnthropTileData
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: bfe91ac2f336bc04aaf500aa291772cd, type: 2}
-  Kmax: 50
+  - {fileID: 11400000, guid: 678260ff91f500b4da17241914017a36, type: 2}
+  Kmax: 10
   immigrationPossible: 0

@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         //Chercher les tools
         
         toolDeltaTimes.Add(chainsaw, 2); //Ajouter tools au fur et a mesure avec le coût en temps en value
-        Debug.Log(toolDeltaTimes[chainsaw]);
+        
     }
 
     
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump")) // Quand clique souris alors faire passer le temps de deltaDiscreteTime et OnTick() chaque objet de timeDependent
         { 
-             discreteTime =+ deltaDiscreteTime;
+             discreteTime += deltaDiscreteTime;
  
              foreach (TimeDependent timeDependent in timeDependentList)
              {

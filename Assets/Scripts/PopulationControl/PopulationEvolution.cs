@@ -20,6 +20,8 @@ public class PopulationEvolution : TimeDependent
     private GameObject[] localSeeds;
     private GameObject[] cores;
     private List<GameObject> coresVoisins = new List<GameObject>();
+    private MapManager mapManager;
+
 
 
 
@@ -32,13 +34,18 @@ public class PopulationEvolution : TimeDependent
     protected override void Start()
     {
         
-        
+
+
         base.Start(); //Call le start de la classe parente
+
+        //ChercheMapmanager
+        mapManager = FindObjectOfType<MapManager>();
 
         //Si objet tag "seed" present dans la cell alors prend la variable nindivseed de seed et le prend en Nindiv
         localSeeds = GameObject.FindGameObjectsWithTag("seed");
         //Cherche la map
         map = FindObjectOfType<Tilemap>();
+
 
         foreach (GameObject obj in localSeeds)
         {
@@ -83,10 +90,7 @@ public class PopulationEvolution : TimeDependent
 
     }
 
-    //private List<GameObject> GetVoisins(GameObject[] voisinous) 
-    //{
-    //    cores = GameObject.FindGameObjectsWithTag("Tilecore"); //Cherche tous les cores
-   // }
+ 
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
 
@@ -140,9 +144,18 @@ public class PopulationEvolution : TimeDependent
 
             //immigration
 
-            immigration = GetImmigration(coresVoisins);
+            if(mapManager.GetTileImmigrationPossible(this.transform.position) == true) //Si terrain non favorable emmigration = 0 // A changer en un facteur de immigration ? (route = 0.5*emmigration)
+            {
+                immigration = GetImmigration(coresVoisins);
+            }
 
+            else 
+            {
+                immigration = 0;
+            }
 
+            //Kmax
+            capaciteMax = mapManager.GetTileKmax(this.transform.position) ;
 
 
 
@@ -158,7 +171,7 @@ public class PopulationEvolution : TimeDependent
 
 
 
-        //Spawn de sprites Sonneur
+        //--------------------------Spawn de sprites Sonneur
 
         Vector3 corePosition = map.WorldToCell(this.transform.position);
 
