@@ -9,6 +9,9 @@ public class GameEvents : MonoBehaviour
     public UnityEvent chainsawButtonTrigger;
     public GameObject chainsaw;
     public UnityEvent chainsawUsed;
+    public UnityEvent excavationButtonTrigger;
+    public GameObject excavation;
+    public UnityEvent excavationUsed;
     public bool toolActivated;
 
 
@@ -26,10 +29,14 @@ public class GameEvents : MonoBehaviour
 
         toolActivated = false;
 
-        chainsawButtonTrigger.AddListener(ToolActivated); 
-        chainsawButtonTrigger.AddListener(ActivateChainsaw);
-        chainsawUsed.AddListener(ActivateChainsaw);
-        
+        chainsawButtonTrigger.AddListener(ToolActivated); //Signale qu'un tool est active
+        chainsawButtonTrigger.AddListener(ActivateChainsaw); //Active le script du tool
+        chainsawUsed.AddListener(ActivateChainsaw); //Désactive une fois utilise
+
+        excavationButtonTrigger.AddListener(ToolActivated);
+        excavationButtonTrigger.AddListener(ActivateExcavation);
+        excavationUsed.AddListener(ActivateExcavation);
+
 
 
 
@@ -40,6 +47,12 @@ public class GameEvents : MonoBehaviour
     {
         chainsawButtonTrigger.Invoke();
 
+
+    }
+
+    public void ExcavationButton()
+    {
+        excavationButtonTrigger.Invoke();
 
     }
 
@@ -55,11 +68,33 @@ public class GameEvents : MonoBehaviour
         }
         else
         {
-            chainsaw.GetComponent<ChainsawController>().enabled = true;
            
-
+            
+                chainsaw.GetComponent<ChainsawController>().enabled = true;
+           
         }
       
+
+    }
+
+    private void ActivateExcavation()
+    {
+        if (excavation.GetComponent<ExcavationController>().enabled == true)
+        {
+
+            excavation.GetComponent<ExcavationController>().enabled = false;
+
+
+        }
+        else
+        {
+                      
+                excavation.GetComponent<ExcavationController>().enabled = true;
+
+        }
+
+
+
 
     }
 
