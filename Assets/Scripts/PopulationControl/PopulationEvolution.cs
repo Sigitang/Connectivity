@@ -8,7 +8,7 @@ public class PopulationEvolution : TimeDependent
 {
     [SerializeField]
     private float nIndiv = 0; // Nombre d'individus
-    public float tauxReproduction = 2; // a noter ailleurs ? Taux de reproduction
+    public float tauxReproduction = 1f; // a noter ailleurs ? Taux de reproduction
     public float capaciteMax = 100; //Capacite max
 
     [SerializeField]
@@ -57,20 +57,11 @@ public class PopulationEvolution : TimeDependent
         }
 
 
-       
-
-
-
-
     }
 
     public void Awake()
     {
         prefabIndiv = Resources.Load("Prefabs/SonneurBigIndiv"); //va chercher le prefab sonneur
-
-
-
-        
 
     }
 
@@ -85,9 +76,7 @@ public class PopulationEvolution : TimeDependent
             
         }
        
-        return immi;
-      
-
+        return immi;   
     }
 
  
@@ -138,7 +127,7 @@ public class PopulationEvolution : TimeDependent
             //emmigration
             if (nIndiv >= (capaciteMax - (0.1*capaciteMax))) //si N s'approche de K alors
             {
-                emmigration = nIndiv*0.1f; //emmigration devient 0.1*N                              // A DIVISER PAR NOMBRE DE VOISINS FAVORABLES
+                emmigration = nIndiv*0.1f; //emmigration devient 0.1*N    // A DIVISER PAR NOMBRE DE VOISINS FAVORABLES
                 
             }
 
@@ -156,6 +145,10 @@ public class PopulationEvolution : TimeDependent
 
             //Kmax
             capaciteMax = mapManager.GetTileKmax(this.transform.position) ;
+
+            //Reproduction
+            
+
 
 
 
