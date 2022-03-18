@@ -26,8 +26,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-       
-        
 
         GameEvents.current.chainsawUsed.AddListener(delegate { ChangeDeltaDiscreteTime(chainsaw); }); //inscrit Changedeltadiscretetime a l'event d'utilisation de la chainsaw
         GameEvents.current.chainsawUsed.AddListener(LaunchOnTick); //Déclenche le tick quand la chainsaw est utilisée
