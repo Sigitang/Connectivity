@@ -35,12 +35,9 @@ public class ChainsawController : MonoBehaviour
             {
                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                Vector3Int gridPosition = map.WorldToCell(worldPosition);
-               tileName = mapManager.GetTileName(worldPosition);
-            
-            
+                gridPosition += new Vector3Int(0, 0, 1);
 
-            
-                if(tileName == "forest") 
+            if (map.GetTile(gridPosition) == forest) 
                 {
 
                  TileBase newTile = empty;
@@ -49,13 +46,6 @@ public class ChainsawController : MonoBehaviour
                  GameEvents.current.chainsawUsed.Invoke();
                  
                
-
-
-               
-              
-
-
-
 
             }
 
