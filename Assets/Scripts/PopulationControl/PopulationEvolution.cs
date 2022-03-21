@@ -8,8 +8,8 @@ public class PopulationEvolution : TimeDependent
 {
     [SerializeField]
     private float nIndiv = 0; // Nombre d'individus
-    public float tauxReproduction = 1f; // a noter ailleurs ? Taux de reproduction
-    public float capaciteMax = 100; //Capacite max
+    public float tauxReproduction = 0.2f; // a noter ailleurs ? Taux de reproduction
+    public float capaciteMax = 30; //Capacite max
 
     [SerializeField]
     private float immigration = 0f;
