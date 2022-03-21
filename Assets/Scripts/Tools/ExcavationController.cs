@@ -32,19 +32,19 @@ public class ExcavationController : MonoBehaviour
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int gridPosition = map.WorldToCell(worldPosition);
-            tileName = mapManager.GetTileName(worldPosition);
+            
+            
+            gridPosition += new Vector3Int(0, 0, 1);
+            
 
-
-
-
-            if (tileName == "Canvas-grass")
+            if (map.GetTile(gridPosition) == empty)
             {
 
                 TileBase newTile = Zh1;
                 map.SetTile(gridPosition, null);
                 map.SetTile(gridPosition, newTile);
                 GameEvents.current.excavationUsed.Invoke();
-
+                
 
 
 
