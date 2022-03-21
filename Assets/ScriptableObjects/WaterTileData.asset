@@ -15,4 +15,4 @@ MonoBehaviour:
   tiles:
   - {fileID: 11400000, guid: 00707f3bb6dd7cd43b962db78eaecec5, type: 2}
   Kmax: 0
-  immigrationPossible: 0
+  immigrationFactor: 0.8

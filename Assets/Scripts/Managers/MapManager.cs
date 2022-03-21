@@ -31,20 +31,16 @@ public class MapManager : MonoBehaviour
             }
 
 
-
-
-
         }
-
        
     }
 
 
-    public string GetTileName(Vector2 worldPosition)
+    public string GetTileName(Vector3Int gridPosition)
 
     {
         
-        Vector3Int gridPosition = map.WorldToCell(worldPosition); // Conversion world position to grid position
+        //Vector3Int gridPosition = map.WorldToCell(worldPosition); // Conversion world position to grid position
         TileBase tile = map.GetTile(gridPosition);
         if(tile == null) 
         {
@@ -58,36 +54,37 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public bool GetTileImmigrationPossible(Vector2 worldPosition)
+    public float GetTileImmigration(Vector3Int gridPosition)
     {
         
 
-        Vector3Int gridPosition = map.WorldToCell(worldPosition);// Conversion world position to grid position
+        //Vector3Int gridPosition = map.WorldToCell(worldPosition);// Conversion world position to grid position
         TileBase tile = map.GetTile(gridPosition);
         
 
         if (tile == null)
         {
-            return false;
+            return 0;
         }
         else
         {
-            bool immigrationPossible = dataFromTiles[tile].immigrationPossible; //extrait le nom de la tile
-            return immigrationPossible;
+            float immigrationFactor = dataFromTiles[tile].immigrationFactor; //extrait le nom de la tile
+            return immigrationFactor;
 
         }
 
 
     }
 
-    public float GetTileKmax(Vector2 worldPosition)
+    public float GetTileKmax(Vector3Int gridPosition)
     {
-        Vector3Int gridPosition = map.WorldToCell(worldPosition);// Conversion world position to grid position
+        //Vector3Int gridPosition = map.WorldToCell(worldPosition);// Conversion world position to grid position
         TileBase tile = map.GetTile(gridPosition);
 
         if (tile == null)
         {
             return 0;
+          
         }
         else
         {

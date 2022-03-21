@@ -74,8 +74,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetButtonDown("Jump")) // Quand space alors faire passer le temps de deltaDiscreteTime et OnTick() chaque objet de timeDependent // Test only
-        { 
-             discreteTime += deltaDiscreteTime;
+        {
+            deltaDiscreteTime = 1;
+            discreteTime += deltaDiscreteTime;
  
              foreach (TimeDependent timeDependent in timeDependentList)
              {

@@ -8,12 +8,11 @@ public class PopulationEvolution : TimeDependent
 {
     [SerializeField]
     private float nIndiv = 0; // Nombre d'individus
-    public float tauxReproduction = 0.2f; // a noter ailleurs ? Taux de reproduction
-    public float capaciteMax = 30; //Capacite max
+    public float tauxReproduction = 1f; // a noter ailleurs ? Taux de reproduction
+    public float capaciteMax; //Capacite max
 
     [SerializeField]
     private float immigration = 0f;
-
     public float emmigration = 0f;
     public Object prefabIndiv;
     public Tilemap map;
@@ -21,6 +20,7 @@ public class PopulationEvolution : TimeDependent
     private GameObject[] cores;
     private List<GameObject> coresVoisins = new List<GameObject>();
     private MapManager mapManager;
+    private float immigrationFactor;
 
 
 
@@ -52,6 +52,7 @@ public class PopulationEvolution : TimeDependent
             if(map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position))
             {
                 nIndiv = obj.GetComponent<PopulationSpawnSeed>().nIndivStart;
+                Debug.Log("Nstrart");
             }
 
         }
@@ -79,18 +80,7 @@ public class PopulationEvolution : TimeDependent
         return immi;   
     }
 
-    private float GetReproduction(List<GameObject> voisins) //va chercher la variable emmigration des tuiles voisines
-    {
-        float repro = 0;
-        foreach (GameObject obj in voisins)
-        {
-          
-            
-
-        }
-
-        return repro;
-    }
+  
 
 
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
@@ -132,42 +122,44 @@ public class PopulationEvolution : TimeDependent
 
 
 
-        int limite = 1;
+        int limite = 0;
         //N+1=N*e(r(1-N/K))+i+e
         while(limite < deltaDiscreteTime)
         {
-
+            //Kmax
+            
+            capaciteMax = mapManager.GetTileKmax(map.WorldToCell(this.transform.position));
+            
+                               
             //emmigration
             if (nIndiv >= (capaciteMax - (0.1*capaciteMax))) //si N s'approche de K alors
-            {
+            {                    
                 emmigration = nIndiv*0.1f; //emmigration devient 0.1*N    // A DIVISER PAR NOMBRE DE VOISINS FAVORABLES
                 
             }
 
             //immigration
+                
+            immigration = GetImmigration(coresVoisins);
+            immigrationFactor = mapManager.GetTileImmigration(map.WorldToCell(this.transform.position));
 
-            if(mapManager.GetTileImmigrationPossible(this.transform.position) == true) //Si terrain non favorable emmigration = 0 // A changer en un facteur de immigration ? (route = 0.5*emmigration)
-            {
-                immigration = GetImmigration(coresVoisins);
-            }
+            immigration *=  immigrationFactor;
 
-            else 
-            {
-                immigration = 0;
-            }
 
-            //Kmax
-            capaciteMax = mapManager.GetTileKmax(this.transform.position) ;
 
             //Reproduction
-            
+
+           
 
 
 
 
 
             //Calcul N+1
-            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passé
+            
+
+            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime pass
+          
             
             limite++;
 
@@ -176,7 +168,7 @@ public class PopulationEvolution : TimeDependent
 
 
 
-
+                
         //--------------------------Spawn de sprites Sonneur
 
         Vector3 corePosition = map.WorldToCell(this.transform.position);
@@ -203,7 +195,7 @@ public class PopulationEvolution : TimeDependent
         }
 
         //Random pos
-        limite = 1;
+        limite = 1;                                         
         while(limite < nIndiv/10) //1 sprite pour 10 individus
         {
             Vector3 randomPos = new Vector3(Random.Range(-0.1f,0.1f), Random.Range(-0.1f, 0.1f),0); // spawn autour du core sur la tile

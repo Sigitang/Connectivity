@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PopulationSpawnSeed : MonoBehaviour
 {
-    public float nIndivStart;
+    public float nIndivStart = 30;
 
     public void Start()
     {
-        nIndivStart = 10;
+        
     }
     
     
