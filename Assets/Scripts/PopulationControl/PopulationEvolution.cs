@@ -79,7 +79,20 @@ public class PopulationEvolution : TimeDependent
         return immi;   
     }
 
- 
+    private float GetReproduction(List<GameObject> voisins) //va chercher la variable emmigration des tuiles voisines
+    {
+        float repro = 0;
+        foreach (GameObject obj in voisins)
+        {
+          
+            
+
+        }
+
+        return repro;
+    }
+
+
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
 
@@ -153,7 +166,7 @@ public class PopulationEvolution : TimeDependent
 
 
 
-
+            //Calcul N+1
             nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passé
             
             limite++;

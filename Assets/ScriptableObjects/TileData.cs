@@ -13,5 +13,6 @@ public class TileData : ScriptableObject //Scriptable object stocke donnée de tu
 
     public float  Kmax;
     public bool  immigrationPossible;
+   
 
 }
