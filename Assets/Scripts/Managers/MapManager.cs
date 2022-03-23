@@ -69,6 +69,74 @@ public class MapManager : MonoBehaviour
         return adjacentTiles;
     }
 
+    public Dictionary<string, GameObject> GetadjacentCores(Vector3Int gridposition)
+    {
+        List<GameObject> allcores = new List<GameObject>(GameObject.FindGameObjectsWithTag("Tilecore")); //get all tilecores
+
+        Dictionary<string, GameObject> adjacentCores = new Dictionary<string, GameObject>
+        {
+            { "NW", null}, { "SE", null}, { "NE", null}, { "SW", null}
+        };
+
+        foreach (GameObject obj in allcores) // Importe les cores des grilles environnantes // adjacentCores --> [NW,SE,NE,SW]       
+        {
+            List<bool> trackList = new List<bool>();
+            trackList.Add(false);
+            trackList.Add(false);
+            trackList.Add(false);
+            trackList.Add(false);
+
+
+            if (trackList[0]==false)
+            {
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(-1, 0, 0)) //NW
+                {
+                    adjacentCores["NW"] = obj;
+                    trackList[0] = true;
+                }
+            
+            }
+
+            if (trackList[1] == false)
+            {
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(0, -1, 0)) //SE
+                {
+                    adjacentCores["SE"] = obj;
+                    trackList[1] = true;
+                }
+               
+
+            }
+
+
+            if (trackList[2] == false)
+            {
+
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(1, 0, 0)) //NE
+                {
+                    adjacentCores["NE"] = obj;
+                    trackList[2] = true;
+                }
+              
+            }
+
+            if (trackList[3] == false)
+            {
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(0, 1, 0)) //SW
+                {
+                    adjacentCores["SW"] = obj;
+                    trackList[3] = true;
+                }
+                
+
+            }
+
+          
+
+        }
+        return adjacentCores;
+    }
+
 
     public Dictionary<string, float> GetAdjacentTilespermeability(Dictionary<string, TileBase> Tilesvoisines)
     {
