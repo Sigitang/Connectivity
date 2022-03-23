@@ -16,3 +16,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bfe91ac2f336bc04aaf500aa291772cd, type: 2}
   Kmax: 25
   immigrationFactor: 0.8
+  reproductionFactor: 0

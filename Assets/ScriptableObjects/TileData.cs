@@ -11,8 +11,10 @@ public class TileData : ScriptableObject //Scriptable object stocke donnée de tu
 
     public TileBase[] tiles; //assigne le nom tile a toutes les tiles
 
-    public float  Kmax;
-    public float  immigrationFactor;
+    public float Kmax;
+    public float permeability;
+    public float reproductionFactor;
+    
    
 
 }

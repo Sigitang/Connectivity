@@ -54,7 +54,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public float GetTileImmigration(Vector3Int gridPosition)
+    public float GetTilepermeability(Vector3Int gridPosition)
     {
         
 
@@ -68,13 +68,64 @@ public class MapManager : MonoBehaviour
         }
         else
         {
-            float immigrationFactor = dataFromTiles[tile].immigrationFactor; //extrait le nom de la tile
-            return immigrationFactor;
+            float permeability = dataFromTiles[tile].permeability; //extrait le nom de la tile
+            return permeability;
 
         }
 
 
     }
+
+
+
+    public Dictionary<string, TileBase> GetAdjacentTiles(Vector3Int gridPosition) //
+    {
+        Dictionary<string, TileBase> adjacentTiles = new Dictionary<string, TileBase>
+        {
+            { "NW", map.GetTile(gridPosition + new Vector3Int(0, -1, 0)) },
+            { "SE", map.GetTile(gridPosition + new Vector3Int(0, 1, 0)) },
+            { "NE", map.GetTile(gridPosition + new Vector3Int(1, 0, 0)) },
+            { "SW", map.GetTile(gridPosition + new Vector3Int(-1, 0, 0)) }
+        };
+
+       
+        return adjacentTiles;
+    }
+
+
+    public Dictionary<string, float> GetAdjacentTilespermeability(Dictionary<string, TileBase> Tilesvoisines)
+    {
+        Dictionary<string, float> AdjTilespermeability = new Dictionary<string, float>
+        {
+            { "NW", 0 },
+            { "SE", 0 },
+            { "NE", 0 },
+            { "SW", 0 }
+        };
+
+        string[] key = new string[] { "NW", "SE", "NE", "SW" };
+        int limite = 1;
+        while (limite <= 4)
+        {
+            
+            if (Tilesvoisines[key[limite]] is null)
+             {
+                
+             }
+             else 
+             {
+              AdjTilespermeability[key[limite]] = dataFromTiles[Tilesvoisines[key[limite]]].permeability;
+                
+            }
+            limite++;
+        }
+
+        
+        
+        return AdjTilespermeability;
+    } //Bug out of bounds array
+   
+
 
     public float GetTileKmax(Vector3Int gridPosition)
     {
@@ -90,6 +141,23 @@ public class MapManager : MonoBehaviour
         {
             float Kmax = dataFromTiles[tile].Kmax; //extrait le nom de la tile
             return Kmax;
+
+        }
+    }
+
+    public float GetTilereproductionFactor(Vector3Int gridPosition)
+    {
+        TileBase tile = map.GetTile(gridPosition);
+
+        if (tile == null)
+        {
+            return 0;
+
+        }
+        else
+        {
+            float reproductionFactor = dataFromTiles[tile].reproductionFactor; //extrait le nom de la tile
+            return reproductionFactor;
 
         }
     }

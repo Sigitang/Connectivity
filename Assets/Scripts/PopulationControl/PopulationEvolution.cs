@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 
 
 public class PopulationEvolution : TimeDependent
@@ -12,7 +13,7 @@ public class PopulationEvolution : TimeDependent
     public float capaciteMax; //Capacite max
 
     [SerializeField]
-    private float immigration = 0f;
+    private float immigration;
     public float emmigration = 0f;
     public Object prefabIndiv;
     public Tilemap map;
@@ -20,7 +21,11 @@ public class PopulationEvolution : TimeDependent
     private GameObject[] cores;
     private List<GameObject> coresVoisins = new List<GameObject>();
     private MapManager mapManager;
-    private float immigrationFactor;
+
+    
+    private Dictionary<string, TileBase> adjacentTiles;
+    private Dictionary<string, float> adjacentTilespermeability;
+
 
 
 
@@ -52,17 +57,19 @@ public class PopulationEvolution : TimeDependent
             if(map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position))
             {
                 nIndiv = obj.GetComponent<PopulationSpawnSeed>().nIndivStart;
-                Debug.Log("Nstrart");
+                
             }
 
         }
+
+       
 
 
     }
 
     public void Awake()
     {
-        prefabIndiv = Resources.Load("Prefabs/SonneurBigIndiv"); //va chercher le prefab sonneur
+        prefabIndiv = Resources.Load("Prefabs/SonneurSmol"); //va chercher le prefab sonneur
 
     }
 
@@ -80,8 +87,52 @@ public class PopulationEvolution : TimeDependent
         return immi;   
     }
 
-  
 
+    private Dictionary<string, float> GetemmigrationEffective(float emmigration, Dictionary<string, TileBase> adjacentTiles)
+    {
+        adjacentTilespermeability = mapManager.GetAdjacentTilespermeability(adjacentTiles);
+
+        Dictionary<string, float> emmigrationEffective = new Dictionary<string, float>();
+
+
+
+        if ((adjacentTilespermeability["NW"] + adjacentTilespermeability["SE"] + adjacentTilespermeability["NE"] + adjacentTilespermeability["SW"]) > 1) //Si emmigration totale > emmigrationtheorique
+        {
+            //Chaque permeabilite/tuile check s'il passe en priorite pour l'emmigration --> "pool d emmigration"
+
+            float eMax = emmigration;
+            int i = 1;
+            string[] key = new string[] { "NW", "SE", "NE", "SW" };
+            while (eMax >= 1 && i < 5)
+            {
+
+                if (adjacentTilespermeability[key[i]] == Mathf.Max(adjacentTilespermeability["NW"], adjacentTilespermeability["SE"], adjacentTilespermeability["NE"], adjacentTilespermeability["SW"]))
+                {
+                    emmigrationEffective.Add(key[i], adjacentTilespermeability[key[i]] * emmigration);
+
+                    eMax -= emmigrationEffective[key[i]];
+                    var max = from x in adjacentTilespermeability where x.Value == adjacentTilespermeability[key[i]] select x.Key; //Linq 
+                    adjacentTilespermeability[max.ToString()] = 0;
+
+                    i = 1;
+
+                }
+                else
+                {
+
+                    i++;
+
+                }
+
+
+
+            }
+
+
+        }
+
+        return emmigrationEffective;
+    }
 
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
@@ -120,48 +171,56 @@ public class PopulationEvolution : TimeDependent
 
         }
 
-
+        
 
         int limite = 0;
         //N+1=N*e(r(1-N/K))+i+e
-        while(limite < deltaDiscreteTime)
+        while (limite < deltaDiscreteTime)
         {
+
+            adjacentTiles = mapManager.GetAdjacentTiles(map.WorldToCell(this.transform.position));
+            
             //Kmax
-            
             capaciteMax = mapManager.GetTileKmax(map.WorldToCell(this.transform.position));
-            
-                               
+
+
             //emmigration
-            if (nIndiv >= (capaciteMax - (0.1*capaciteMax))) //si N s'approche de K alors
-            {                    
-                emmigration = nIndiv*0.1f; //emmigration devient 0.1*N    // A DIVISER PAR NOMBRE DE VOISINS FAVORABLES
-                
+            if (nIndiv > capaciteMax) //si N s'approche de K alors
+            {
+                emmigration = 0.1f * nIndiv;   //emmigrationtheorique = Nx[(N-K)/K] //A DIVISER PAR NOMBRE DE VOISINS FAVORABLES  
             }
 
-            //immigration
-                
-            immigration = GetImmigration(coresVoisins);
-            immigrationFactor = mapManager.GetTileImmigration(map.WorldToCell(this.transform.position));
 
-            immigration *=  immigrationFactor;
+            //Dictionary<string,float> emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles);
+
+            //print(emmigrationEffective);
+
+            //immigration
+            immigration = GetImmigration(coresVoisins);
+            
+
+            
 
 
 
             //Reproduction
+            //tauxReproduction *= mapManager.GetTilereproductionFactor(map.WorldToCell(this.transform.position));
 
-           
 
-
+            
 
 
 
             //Calcul N+1
+           
+                nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passe
             
+           
 
-            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction*(1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime pass
-          
-            
+           
+
             limite++;
+
 
 
         }
@@ -179,7 +238,7 @@ public class PopulationEvolution : TimeDependent
 
         foreach(GameObject obj in gameObjects)
         {
-            Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<RectTransform>().position);
+            Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<Transform>().position);
             
             
             

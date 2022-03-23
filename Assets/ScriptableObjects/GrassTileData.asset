@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiles:
   - {fileID: 11400000, guid: 4d9e220813a109f4ead687f4252d05e1, type: 2}
-  Kmax: 20
-  immigrationFactor: 0.1
+  Kmax: 10
+  immigrationFactor: 0.5
+  reproductionFactor: 0
