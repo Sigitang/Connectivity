@@ -92,7 +92,15 @@ public class PopulationEvolution : TimeDependent
     {
         adjacentTilespermeability = mapManager.GetAdjacentTilespermeability(adjacentTiles);
 
-        Dictionary<string, float> emmigrationEffective = new Dictionary<string, float>();
+        Dictionary<string, float> emmigrationEffective = new Dictionary<string, float>
+        {
+            {"NW", 0 }, {"SE", 0 }, {"NE", 0 }, {"SW", 0 }
+
+        };
+        
+            
+
+        
 
 
 
@@ -108,7 +116,7 @@ public class PopulationEvolution : TimeDependent
 
                 if (adjacentTilespermeability[key[i]] == Mathf.Max(adjacentTilespermeability["NW"], adjacentTilespermeability["SE"], adjacentTilespermeability["NE"], adjacentTilespermeability["SW"]))
                 {
-                    emmigrationEffective.Add(key[i], adjacentTilespermeability[key[i]] * emmigration);
+                    emmigrationEffective[key[i]] = adjacentTilespermeability[key[i]] * emmigration;
 
                     eMax -= emmigrationEffective[key[i]];
                     var max = from x in adjacentTilespermeability where x.Value == adjacentTilespermeability[key[i]] select x.Key; //Linq 
@@ -191,9 +199,9 @@ public class PopulationEvolution : TimeDependent
             }
 
 
-            //Dictionary<string,float> emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles);
+            Dictionary<string,float> emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles);
 
-            //print(emmigrationEffective);
+            print(emmigrationEffective["NW"]);
 
             //immigration
             immigration = GetImmigration(coresVoisins);

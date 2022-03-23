@@ -54,30 +54,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    public float GetTilepermeability(Vector3Int gridPosition)
-    {
-        
-
-        //Vector3Int gridPosition = map.WorldToCell(worldPosition);// Conversion world position to grid position
-        TileBase tile = map.GetTile(gridPosition);
-        
-
-        if (tile == null)
-        {
-            return 0;
-        }
-        else
-        {
-            float permeability = dataFromTiles[tile].permeability; //extrait le nom de la tile
-            return permeability;
-
-        }
-
-
-    }
-
-
-
+ 
     public Dictionary<string, TileBase> GetAdjacentTiles(Vector3Int gridPosition) //
     {
         Dictionary<string, TileBase> adjacentTiles = new Dictionary<string, TileBase>
@@ -104,27 +81,23 @@ public class MapManager : MonoBehaviour
         };
 
         string[] key = new string[] { "NW", "SE", "NE", "SW" };
-        int limite = 1;
-        while (limite <= 4)
+        foreach(string direction in key)
         {
             
-            if (Tilesvoisines[key[limite]] is null)
+            if (Tilesvoisines[direction] is null)
              {
-                
+                AdjTilespermeability[direction] = 0;
              }
              else 
              {
-              AdjTilespermeability[key[limite]] = dataFromTiles[Tilesvoisines[key[limite]]].permeability;
+              AdjTilespermeability[direction] = dataFromTiles[Tilesvoisines[direction]].permeability;
                 
             }
-            limite++;
+          
         }
-
-        
         
         return AdjTilespermeability;
-    } //Bug out of bounds array
-   
+    } 
 
 
     public float GetTileKmax(Vector3Int gridPosition)
