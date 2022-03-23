@@ -97,8 +97,8 @@ public class MapManager : MonoBehaviour
             
             }
 
-            if (trackList[1] == false)
-            {
+           if (trackList[1] == false)
+           {
                 if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(0, -1, 0)) //SE
                 {
                     adjacentCores["SE"] = obj;

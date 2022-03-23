@@ -14,7 +14,7 @@ public class PopulationEvolution : TimeDependent
 
     [SerializeField]
     private float immigration;
-    public float emmigration = 0f;
+    public float emmigration = 0;
     public Object prefabIndiv;
     public Tilemap map;
     private GameObject[] localSeeds;
@@ -74,27 +74,49 @@ public class PopulationEvolution : TimeDependent
 
     private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines
     {
+        
         float immigrationEffective = 0;
 
-        if (voisins["NW"] == null)
-        { }
-        else { immigrationEffective += voisins["NW"].GetComponent<PopulationEvolution>().emmigrationEffective["SE"]; }
+       
+
+        if (voisins["NW"] != null)
+        {
+            immigrationEffective += voisins["NW"].GetComponent<PopulationEvolution>().emmigrationEffective["SE"];
+            Debug.Log("NW found");
+        }
+        
 
 
-        if (voisins["SE"] == null)
-        { }
-        else { immigrationEffective += voisins["SE"].GetComponent<PopulationEvolution>().emmigrationEffective["NW"]; }
+        if (voisins["SE"] != null)
+        {
+            immigrationEffective += voisins["SE"].GetComponent<PopulationEvolution>().emmigrationEffective["NW"];
+            Debug.Log("SE found");
+        }
+       
 
-        if (voisins["SW"] == null)
-        { }
-        else { immigrationEffective += voisins["SW"].GetComponent<PopulationEvolution>().emmigrationEffective["NE"]; }
+        if (voisins["SW"] != null)
+        {
+            immigrationEffective += voisins["NW"].GetComponent<PopulationEvolution>().emmigrationEffective["SE"];
+            Debug.Log("NW found");
+        }
+        
+        if (voisins["NE"] != null)
+        {
+            immigrationEffective += voisins["NE"].GetComponent<PopulationEvolution>().emmigrationEffective["SW"];
+            Debug.Log("NE found");
+        }
 
-        if (voisins["NE"] == null)
-        { }
-        else { immigrationEffective += voisins["NE"].GetComponent<PopulationEvolution>().emmigrationEffective["SW"]; }
+        if (voisins["NW"] != null)
+        {
+
+            var iNW = voisins["NW"].gameObject.GetComponent<PopulationEvolution>().emmigrationEffective;
+            immigrationEffective += iNW["SE"];
+            
+        }
+
 
         return immigrationEffective;
-    } //Bug de reference
+    } 
 
     private Dictionary<string, float> GetemmigrationEffective(float emmigration, Dictionary<string, TileBase> adjacentTiles)
     {
@@ -143,7 +165,7 @@ public class PopulationEvolution : TimeDependent
         }
 
         return emmigrationEffective;
-    }
+    } //BUGBUGBUGBUG
 
    
 
@@ -169,30 +191,51 @@ public class PopulationEvolution : TimeDependent
             //emmigration
             if (nIndiv > capaciteMax) //si N s'approche de K alors
             {
-                emmigration = 0.1f * nIndiv;   //emmigrationtheorique = Nx[(N-K)/K] //A DIVISER PAR NOMBRE DE VOISINS FAVORABLES  
+                emmigration = 0.1f * nIndiv;   
             }
 
 
-            emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles);
-
+            emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles); //renvoi null a t = 0 ?
+           
 
             //immigration    
             Dictionary<string, GameObject> coresVoisins = mapManager.GetadjacentCores(map.WorldToCell(this.transform.position));
-            immigration = GetimmigrationEffective(coresVoisins);
+
+            //float imm = 0;
+
+            if (coresVoisins["NE"] != null)
+            {
+                print( coresVoisins["NE"].GetComponent<PopulationEvolution>().emmigrationEffective);
+                
+                
+                //imm += iNW["NW"]  ;
+                //print(imm);
+            }
+
+             
             
+          
+                
+
+            
+
+            
+
+            // immigration = GetimmigrationEffective(coresVoisins);
+
 
 
             //Reproduction
             //tauxReproduction *= mapManager.GetTilereproductionFactor(map.WorldToCell(this.transform.position));
 
 
-            
+
 
 
 
             //Calcul N+1
-           
-                nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passe
+
+            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passe
             
            
 
