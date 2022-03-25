@@ -72,7 +72,7 @@ public class PopulationEvolution : TimeDependent
     }
 
 
-    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines
+    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines BUGBUGBUG
     {
         
         float immigrationEffective = 0;
@@ -96,8 +96,13 @@ public class PopulationEvolution : TimeDependent
 
         if (voisins["SW"] != null)
         {
-            immigrationEffective += voisins["NW"].GetComponent<PopulationEvolution>().emmigrationEffective["SE"];
-            Debug.Log("NW found");
+            //immigrationEffective += voisins["SW"].GetComponent<PopulationEvolution>().emmigrationEffective["NE"];
+            var vNW = voisins["SW"];
+            var compvNW = vNW.GetComponent<PopulationEvolution>();
+            var eF = compvNW.emmigrationEffective;
+            immigrationEffective += eF["NE"];
+
+            Debug.Log("SW found");
         }
         
         if (voisins["NE"] != null)
@@ -106,68 +111,63 @@ public class PopulationEvolution : TimeDependent
             Debug.Log("NE found");
         }
 
-        if (voisins["NW"] != null)
-        {
 
-            var iNW = voisins["NW"].gameObject.GetComponent<PopulationEvolution>().emmigrationEffective;
-            immigrationEffective += iNW["SE"];
-            
-        }
 
 
         return immigrationEffective;
-    } 
+    }  
+
+
 
     private Dictionary<string, float> GetemmigrationEffective(float emmigration, Dictionary<string, TileBase> adjacentTiles)
     {
-        adjacentTilespermeability = mapManager.GetAdjacentTilespermeability(adjacentTiles);
 
-        Dictionary<string, float> emmigrationEffective = new Dictionary<string, float>
+        adjacentTilespermeability = mapManager.GetAdjacentTilespermeability(adjacentTiles); //Get the permeability from the adjacent tiles
+        //var orientations = new string[]{"NW","NE","SE","SW"}; //liste des keys
+        
+        Dictionary<string, float> priorities = new Dictionary<string, float>();
+        Dictionary<string, float> emmigrationEffective = new Dictionary<string, float> { { "NW", 0 }, { "SE", 0 }, { "NE", 0 }, { "SW", 0 } };
+       
+
+        while (emmigration >= 1)//stop quand le pool d'emmigraiton est vide
         {
-            {"NW", 0 }, {"SE", 0 }, {"NE", 0 }, {"SW", 0 }
-
-        };
-
-
-        if ((adjacentTilespermeability["NW"] + adjacentTilespermeability["SE"] + adjacentTilespermeability["NE"] + adjacentTilespermeability["SW"]) > 1) //Si emmigration totale > emmigrationtheorique
-        {
-            //Chaque permeabilite/tuile check s'il passe en priorite pour l'emmigration --> "pool d emmigration"
-
-            float eMax = emmigration;
-            int i = 0;
-            string[] key = new string[] { "NW", "SE", "NE", "SW" };
-            while (eMax >= 1 && i < 4)
+            //1) classer par priorite
+            foreach (string keys in adjacentTilespermeability.Keys)
             {
-
-                if (adjacentTilespermeability[key[i]] == Mathf.Max(adjacentTilespermeability["NW"], adjacentTilespermeability["SE"], adjacentTilespermeability["NE"], adjacentTilespermeability["SW"]))
+                if(adjacentTilespermeability[keys] == Mathf.Max(adjacentTilespermeability.Values.ToArray())) //check si adjacentTilespermeability[keys] est le max
                 {
-                    emmigrationEffective[key[i]] = adjacentTilespermeability[key[i]] * emmigration;
-
-                    eMax -= emmigrationEffective[key[i]];
-                    var max = from x in adjacentTilespermeability where x.Value == adjacentTilespermeability[key[i]] select x.Key; //Linq 
-                    adjacentTilespermeability[max.ToString()] = 0;
-
-                    i = 0;
+                    priorities.Add(keys, adjacentTilespermeability[keys]);
 
                 }
-                else
-                {
-
-                    i++;
-
-                }
-
-
+                
 
             }
+
+            foreach(string keys in priorities.Keys) //calculer eF pour chaque tuile prioritaire divise par le nombre de tuiles prioritaires
+            {
+                emmigrationEffective[keys] = (priorities[keys]*emmigration)/priorities.Count; //calcule eF
+                emmigration -= emmigrationEffective[keys]; //Soustrait eF au pool
+               
+            }
+
 
 
         }
 
         return emmigrationEffective;
-    } //BUGBUGBUGBUG
 
-   
+
+    }
+
+
+
+
+
+
+
+
+       
+ 
 
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager
     {
@@ -181,69 +181,38 @@ public class PopulationEvolution : TimeDependent
         //N+1=N*e(r(1-N/K))+i+e
         while (limite < deltaDiscreteTime) //1 Tick / discreteTime
         {
-
             adjacentTiles = mapManager.GetAdjacentTiles(map.WorldToCell(this.transform.position));
             
             //Kmax
             capaciteMax = mapManager.GetTileKmax(map.WorldToCell(this.transform.position));
 
-
             //emmigration
-            if (nIndiv > capaciteMax) //si N s'approche de K alors
+            if (nIndiv > capaciteMax)//si N s'approche de K alors
+            {  
+                    emmigration = 0.1f * nIndiv; 
+            }
+            else
             {
-                emmigration = 0.1f * nIndiv;   
+                emmigration = 0;
             }
 
-
             emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles); //renvoi null a t = 0 ?
-           
+            Debug.Log(emmigrationEffective["SE"]);
+            Debug.Log(emmigrationEffective["NW"]);
+            Debug.Log(emmigrationEffective["SW"]);
+            Debug.Log(emmigrationEffective["NE"]);
 
             //immigration    
             Dictionary<string, GameObject> coresVoisins = mapManager.GetadjacentCores(map.WorldToCell(this.transform.position));
-
-            //float imm = 0;
-
-            if (coresVoisins["NE"] != null)
-            {
-                print( coresVoisins["NE"].GetComponent<PopulationEvolution>().emmigrationEffective);
-                
-                
-                //imm += iNW["NW"]  ;
-                //print(imm);
-            }
-
-             
-            
-          
-                
-
-            
-
-            
-
-            // immigration = GetimmigrationEffective(coresVoisins);
-
+            immigration = GetimmigrationEffective(coresVoisins);
 
 
             //Reproduction
             //tauxReproduction *= mapManager.GetTilereproductionFactor(map.WorldToCell(this.transform.position));
 
-
-
-
-
-
             //Calcul N+1
-
             nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigration;//run 1xformule evolution pop pour chaque deltaTime passe
-            
-           
-
-           
-
             limite++;
-
-
 
         }
 
