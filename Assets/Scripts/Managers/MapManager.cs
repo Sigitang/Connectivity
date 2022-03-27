@@ -59,8 +59,8 @@ public class MapManager : MonoBehaviour
     {
         Dictionary<string, TileBase> adjacentTiles = new Dictionary<string, TileBase>
         {
-            { "NW", map.GetTile(gridPosition + new Vector3Int(0, -1, 0)) },
-            { "SE", map.GetTile(gridPosition + new Vector3Int(0, 1, 0)) },
+            { "NW", map.GetTile(gridPosition + new Vector3Int(0, 1, 0)) },
+            { "SE", map.GetTile(gridPosition + new Vector3Int(0, -1, 0)) },
             { "NE", map.GetTile(gridPosition + new Vector3Int(1, 0, 0)) },
             { "SW", map.GetTile(gridPosition + new Vector3Int(-1, 0, 0)) }
         };
@@ -80,16 +80,18 @@ public class MapManager : MonoBehaviour
 
         foreach (GameObject obj in allcores) // Importe les cores des grilles environnantes // adjacentCores --> [NW,SE,NE,SW]       
         {
-            List<bool> trackList = new List<bool>();
-            trackList.Add(false);
-            trackList.Add(false);
-            trackList.Add(false);
-            trackList.Add(false);
+            List<bool> trackList = new List<bool>
+            {
+                false,
+                false,
+                false,
+                false
+            };
 
 
             if (trackList[0]==false)
             {
-                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(-1, 0, 0)) //NW
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(0, 1, 0)) //NW
                 {
                     adjacentCores["NW"] = obj;
                     trackList[0] = true;
@@ -122,7 +124,7 @@ public class MapManager : MonoBehaviour
 
             if (trackList[3] == false)
             {
-                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(0, 1, 0)) //SW
+                if (map.WorldToCell(obj.transform.position) == gridposition + new Vector3Int(-1, 0, 0)) //SW
                 {
                     adjacentCores["SW"] = obj;
                     trackList[3] = true;
