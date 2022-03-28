@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Linq;
 
 
 public class PopulationEvolution : TimeDependent
@@ -18,10 +17,9 @@ public class PopulationEvolution : TimeDependent
     public Object prefabIndiv;
     public Tilemap map;
     private GameObject[] localSeeds;
-    private GameObject[] cores;
     private MapManager mapManager;
 
-    
+
     private Dictionary<string, TileBase> adjacentTiles;
     private Dictionary<string, float> adjacentTilespermeability;
     public Dictionary<string, float> emmigrationEffective;
@@ -30,7 +28,7 @@ public class PopulationEvolution : TimeDependent
 
 
 
-protected override void Start()
+    protected override void Start()
     {
         //Cherche la map
         map = FindObjectOfType<Tilemap>();
@@ -45,10 +43,10 @@ protected override void Start()
         localSeeds = GameObject.FindGameObjectsWithTag("seed");
         foreach (GameObject obj in localSeeds)
         {
-            if(map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position))
+            if (map.WorldToCell(obj.transform.position) == map.WorldToCell(this.transform.position))
             {
                 nIndiv = obj.GetComponent<PopulationSpawnSeed>().nIndivStart;
-                
+
             }
 
         }
@@ -65,111 +63,123 @@ protected override void Start()
     }
 
 
-    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines BUGBUGBUG
+    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines 
     {
-        
         float immigrationEffective = 0;
-
-       
 
         if (voisins["NW"] != null)
         {
             immigrationEffective += voisins["NW"].GetComponent<PopulationEvolution>().emmigrationEffective["SE"];
-            
-        } 
+        }
 
 
         if (voisins["SE"] != null)
         {
             immigrationEffective += voisins["SE"].GetComponent<PopulationEvolution>().emmigrationEffective["NW"];
-            
         }
-       
+
 
         if (voisins["SW"] != null)
         {
             immigrationEffective += voisins["SW"].GetComponent<PopulationEvolution>().emmigrationEffective["NE"];
-            
         }
-        
+
         if (voisins["NE"] != null)
         {
             immigrationEffective += voisins["NE"].GetComponent<PopulationEvolution>().emmigrationEffective["SW"];
-           
         }
 
         return immigrationEffective;
-    }  
+    }
 
     private Dictionary<string, float> GetemmigrationEffective(float emmigration, Dictionary<string, TileBase> adjacentTiles, Dictionary<string, bool> kmaxCheck)
     {
 
         adjacentTilespermeability = mapManager.GetAdjacentTilespermeability(adjacentTiles); //Get the permeability from the adjacent tiles
-        //var orientations = new string[]{"NW","NE","SE","SW"}; //liste des keys
-        
+                                                                                            //var orientations = new string[]{"NW","NE","SE","SW"}; //liste des keys
+
         Dictionary<string, float> priorities = new Dictionary<string, float>();
         Dictionary<string, float> emmigrationEffective = new Dictionary<string, float> { { "NW", 0 }, { "SE", 0 }, { "NE", 0 }, { "SW", 0 } };
 
-        var boucles = 1;
-
-        while (emmigration >= 1 && boucles <= 4)//stop quand le pool d'emmigraiton est vide
+        //1) check Kmax
+        foreach (string keys in adjacentTiles.Keys)
         {
-            //1) classer par priorite
+            if (kmaxCheck[keys] == false)
+            {
+                adjacentTilespermeability[keys] = 0;
+            }
+
+        }
+
+         var boucles = 1;
+
+        while (emmigration >= 1 && boucles <= 4)//stop quand le pool d'emmigration est vide
+        {
+            
+            
+            
+            
+            //2) classer par priorite
+
+
             foreach (string keys in adjacentTilespermeability.Keys)
             {
-                if(adjacentTilespermeability[keys] == Mathf.Max(adjacentTilespermeability.Values.ToArray())) //check si adjacentTilespermeability[keys] est le max
+                
+                if (adjacentTilespermeability[keys] == Mathf.Max(adjacentTilespermeability.Values.ToArray())) //check si adjacentTilespermeability[keys] est le max
                 {
-                    
-                    priorities.Add(keys, adjacentTilespermeability[keys]);
+
+                priorities.Add(keys, adjacentTilespermeability[keys]);
 
                 }
-                
 
             }
 
-            foreach(string keys in priorities.Keys) //calculer eF pour chaque tuile prioritaire divise par le nombre de tuiles prioritaires
+            foreach (string keys in priorities.Keys) //calculer eF pour chaque tuile prioritaire divise par le nombre de tuiles prioritaires
             {
-                if (kmaxCheck[keys] == true)
-                {
+                
+                if(kmaxCheck[keys]==true)
+                { 
                     emmigrationEffective[keys] = (priorities[keys] * emmigration) / priorities.Count; //calcule eF
                     emmigration -= emmigrationEffective[keys]; //Soustrait eF au pool
-                    print("kmaxtrue" + keys);
                 }
-                else { print("kmaxfalse"+keys); }
+                else { }
+
+
             }
 
             priorities.Remove("NW"); priorities.Remove("NE"); priorities.Remove("SE"); priorities.Remove("SW");
             boucles++;
         }
 
-        
-        
+
+
 
 
         return emmigrationEffective;
-        
-        
-        
+
+
+
 
 
     }
 
-    private Dictionary<string, bool> CheckKmaxinAdjacentCores(Dictionary<string, GameObject> voisins){
+    private Dictionary<string, bool> CheckKmaxinAdjacentCores(Dictionary<string, GameObject> voisins)
+    {
         Dictionary<string, bool> kMaxCheck = new Dictionary<string, bool>();
 
 
-        foreach(string keys in voisins.Keys)
+        foreach (string keys in voisins.Keys)
         {
 
-            if (voisins[keys] != null) 
-            { 
-                if(voisins[keys].GetComponent<PopulationEvolution>().nindivonKmax >= 0.8)
+            if (voisins[keys] != null)
+            {
+                if (voisins[keys].GetComponent<PopulationEvolution>().nindivonKmax >= 0.8)
                 {
-                kMaxCheck.Add(keys,false);
+                    kMaxCheck.Add(keys, false);
                 }
                 else
                 {
-                kMaxCheck.Add(keys, true);
+                    kMaxCheck.Add(keys, true);
                 }
             }
             else
@@ -181,15 +191,16 @@ protected override void Start()
 
 
         return kMaxCheck;
-        }
+    }
+
 
     public override void OnTick(int deltaDiscreteTime) //On Tick déclenché pour tous object de classe "time dependent" par le GameManager // Faire un latetick pour laisser le temps ?
 
     {
 
-        
 
-        emmigrationEffective= new Dictionary<string, float> { { "NW", 0 }, { "SE", 0 }, { "NE", 0 }, { "SW", 0 } };
+
+        emmigrationEffective = new Dictionary<string, float> { { "NW", 0 }, { "SE", 0 }, { "NE", 0 }, { "SW", 0 } };
 
 
         int limite = 0;
@@ -204,82 +215,83 @@ protected override void Start()
 
             //emmigration
             if (nIndiv > capaciteMax)//si N s'approche de K alors
-            {  
-                    emmigration = 0.1f * nIndiv; 
+            {
+                emmigration = 0.1f * nIndiv;
             }
             else
             {
                 emmigration = 0;
             }
 
-            var kmaxCheck = CheckKmaxinAdjacentCores(coresVoisins);
-            emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles, kmaxCheck); 
+            Dictionary<string, bool> kmaxCheck = CheckKmaxinAdjacentCores(coresVoisins);
+            //print("NW" + kmaxCheck["NW"]); print("SE" + kmaxCheck["SE"]); print("SW"+kmaxCheck["SW"]); print("NE"+kmaxCheck["NE"]);
+
+            emmigrationEffective = GetemmigrationEffective(emmigration, adjacentTiles, kmaxCheck);
 
             //immigration    
             immigration = GetimmigrationEffective(coresVoisins);
 
             var emmigrationEffectiveTotal = emmigrationEffective["NW"] + emmigrationEffective["SE"] + emmigrationEffective["NE"] + emmigrationEffective["SW"];
 
-            
+
 
             //Reproduction
             tauxReproduction = mapManager.GetTilereproductionFactor(map.WorldToCell(this.transform.position));
 
             //Calcul N+1
-            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigrationEffectiveTotal    ;//run 1xformule evolution pop pour chaque deltaTime passe
-
+            nIndiv = (nIndiv * Mathf.Exp(tauxReproduction * (1 - nIndiv / capaciteMax))) + immigration - emmigrationEffectiveTotal;//run 1xformule evolution pop pour chaque deltaTime passe
             nindivonKmax = nIndiv / capaciteMax;
 
             limite++;
 
-            
+
 
         }
 
 
 
-                
+
         //--------------------------Spawn de sprites Sonneur ----------------------------------------
 
         Vector3 corePosition = map.WorldToCell(this.transform.position);
 
         var gameObjects = GameObject.FindGameObjectsWithTag("IndivSprite"); //cherche les objets avec le tag IndivSprite et les supprime 
 
-        
 
-        foreach(GameObject obj in gameObjects)
+
+        foreach (GameObject obj in gameObjects)
         {
             Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<Transform>().position);
-            
-            
-            
 
-            if (spriteTransform == corePosition ) //supprime les sprites sur la case du core        //PAS PARFAIT: FAIRE UN SPAWN ET DESPAWN DIFFERENCIE
+
+
+
+            if (spriteTransform == corePosition) //supprime les sprites sur la case du core        //PAS PARFAIT: FAIRE UN SPAWN ET DESPAWN DIFFERENCIE
             {
                 Object.Destroy(obj);
 
             }
-            
-            
+
+
 
         }
 
         //Random pos
-        limite = 1;                                         
-        while(limite < nIndiv/1) //1 sprite pour 10 individus
+        limite = 1;
+        while (limite < nIndiv / 1) //1 sprite pour 10 individus
         {
-            Vector3 randomPos = new Vector3(Random.Range(-0.1f,0.1f), Random.Range(-0.1f, 0.1f),0); // spawn autour du core sur la tile
-            
-            Instantiate(prefabIndiv, transform.position+randomPos, Quaternion.identity, GameObject.Find("Units").transform); 
+            Vector3 randomPos = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); // spawn autour du core sur la tile
+
+            Instantiate(prefabIndiv, transform.position + randomPos, Quaternion.identity, GameObject.Find("Units").transform);
             limite++;
         }
 
-        } 
+    }
 
 
-    
 
-    
-    
+
+
+
 }
 
