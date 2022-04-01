@@ -13,6 +13,9 @@ public class GameEvents : MonoBehaviour
     public GameObject excavation;
     public UnityEvent excavationUsed;
     public bool toolActivated;
+    public GameObject ecopath;
+    public UnityEvent ecopathUsed;
+    public UnityEvent ecopathButtonTrigger;
 
 
     private void Awake()
@@ -37,6 +40,11 @@ public class GameEvents : MonoBehaviour
         excavationButtonTrigger.AddListener(ActivateExcavation);
         excavationUsed.AddListener(ActivateExcavation);
 
+        excavationButtonTrigger.AddListener(ToolActivated);
+        excavationButtonTrigger.AddListener(ActivateEcopath);
+        excavationUsed.AddListener(ActivateEcopath);
+
+
 
 
 
@@ -56,7 +64,13 @@ public class GameEvents : MonoBehaviour
 
     }
 
-    
+    public void EcopathButton()
+    {
+        excavationButtonTrigger.Invoke();
+
+    }
+
+
     private void ActivateChainsaw()
     {
       if(chainsaw.GetComponent<ChainsawController>().enabled == true)
@@ -90,6 +104,28 @@ public class GameEvents : MonoBehaviour
         {
                       
                 excavation.GetComponent<ExcavationController>().enabled = true;
+
+        }
+
+
+
+
+    }
+
+
+    private void ActivateEcopath()
+    {
+        if (ecopath.GetComponent<EcopathController>().enabled == true)
+        {
+
+            ecopath.GetComponent<EcopathController>().enabled = false;
+
+
+        }
+        else
+        {
+
+            ecopath.GetComponent<EcopathController>().enabled = true;
 
         }
 

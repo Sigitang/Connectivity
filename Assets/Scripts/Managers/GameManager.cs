@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     readonly Dictionary<GameObject, int> toolDeltaTimes = new Dictionary<GameObject, int>();
     public GameObject chainsaw;
     public GameObject excavation;
+    public GameObject ecopath;
 
 
 
@@ -33,6 +34,9 @@ public class GameManager : MonoBehaviour
         GameEvents.current.excavationUsed.AddListener(delegate { ChangeDeltaDiscreteTime(excavation); }); //inscrit Changedeltadiscretetime a l'event d'utilisation de la chainsaw
         GameEvents.current.excavationUsed.AddListener(LaunchOnTick); //Déclenche le tick quand la chainsaw est utilisée
 
+        GameEvents.current.ecopathUsed.AddListener(delegate { ChangeDeltaDiscreteTime(excavation); }); //inscrit Changedeltadiscretetime a l'event d'utilisation de la chainsaw
+        GameEvents.current.ecopathUsed.AddListener(LaunchOnTick); //Déclenche le tick quand la chainsaw est utilisée
+
         discreteTime = 0; //time = 0 au debut du jeu
         limitDiscreteTime = 250; //changer en fonction du level
 
@@ -40,6 +44,7 @@ public class GameManager : MonoBehaviour
         
         toolDeltaTimes.Add(chainsaw, 2); //Ajouter tools au fur et a mesure avec le coût en temps en value
         toolDeltaTimes.Add(excavation, 10);
+        toolDeltaTimes.Add(ecopath, 10);
     }
 
     

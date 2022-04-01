@@ -63,7 +63,7 @@ public class PopulationEvolution : TimeDependent
     }
 
 
-    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigration des tuiles voisines 
+    private float GetimmigrationEffective(Dictionary<string, GameObject> voisins) //va chercher la variable emmigrationEffective des tuiles voisines 
     {
         float immigrationEffective = 0;
 
@@ -163,7 +163,7 @@ public class PopulationEvolution : TimeDependent
 
     }
 
-    private Dictionary<string, bool> CheckKmaxinAdjacentCores(Dictionary<string, GameObject> voisins)
+    private Dictionary<string, bool> CheckKmaxinAdjacentCores(Dictionary<string, GameObject> voisins) //Check si les tuiles adjacentes ont un nIndiv/Kmax >= 0.8 (evite les retours)
     {
         Dictionary<string, bool> kMaxCheck = new Dictionary<string, bool>();
 
@@ -214,9 +214,9 @@ public class PopulationEvolution : TimeDependent
             capaciteMax = mapManager.GetTileKmax(map.WorldToCell(this.transform.position));
 
             //emmigration
-            if (nIndiv > capaciteMax)//si N s'approche de K alors
+            if (nIndiv > 0.95*capaciteMax)//si N s'approche de K alors:
             {
-                emmigration = 0.1f * nIndiv;
+                emmigration = Random.Range(0.1f,0.2f) * nIndiv;
             }
             else
             {

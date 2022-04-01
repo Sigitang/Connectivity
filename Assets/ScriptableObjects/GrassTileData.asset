@@ -16,4 +16,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d9e220813a109f4ead687f4252d05e1, type: 2}
   Kmax: 10
   permeability: 0.8
-  reproductionFactor: 1
+  reproductionFactor: 0.95
