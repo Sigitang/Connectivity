@@ -214,9 +214,9 @@ public class PopulationEvolution : TimeDependent
             capaciteMax = mapManager.GetTileKmax(map.WorldToCell(this.transform.position));
 
             //emmigration
-            if (nIndiv > 0.95*capaciteMax)//si N s'approche de K alors:
+            if (nIndiv > 0.95 * capaciteMax)//si N s'approche de K alors:
             {
-                emmigration = Random.Range(0.1f,0.2f) * nIndiv;
+                emmigration = Random.Range(0.1f, 0.2f) * nIndiv;
             }
             else
             {
@@ -248,6 +248,8 @@ public class PopulationEvolution : TimeDependent
 
         }
 
+
+
         //------------------------Detection des sprites sur la tuile---------------------------------
 
         Vector3 corePosition = map.WorldToCell(this.transform.position);
@@ -266,19 +268,24 @@ public class PopulationEvolution : TimeDependent
             }
         }
 
-        //-------------------------Animation Sonneur deplacements ------------------------------------
-       // var limiteMovement = 0 ;
-       // foreach(GameObject obj in indivSpriteNumber)
-       // {
-        //    if(limiteMovement <= emmigrationEffective["NW"])
-         //   {
-         //       var rb = obj.GetComponent<Rigidbody2D>();
-         //       rb.MovePosition(obj.transform.position + map.CellToWorld(new Vector3Int(-1,0,0)));
 
-         //   }
 
-       // }
-        
+        //-------------------------Sonneur deplacements ------------------------------------
+
+
+
+        var limiteMovement = 0;
+
+        foreach (GameObject obj in indivSpriteNumber)
+        {
+            if (limiteMovement <= emmigrationEffective["NW"])
+            {
+                obj.GetComponent<IndivSpriteController>().moovingNW = true;
+                limiteMovement++;
+            }
+
+        }
+
 
 
 
@@ -287,29 +294,27 @@ public class PopulationEvolution : TimeDependent
         var limiteDelete = indivSpriteNumber.Count - nIndiv;
         foreach (GameObject obj in indivSpriteNumber)
         {
-            if(nIndiv < limiteDelete)
-            { 
+            if (nIndiv < limiteDelete)
+            {
                 Destroy(obj);
                 limiteDelete--;
             }
         }
 
         var limiteSpawn = indivSpriteNumber.Count;
-        while(limiteSpawn < nIndiv && limiteSpawn < 100)
+        while (limiteSpawn < nIndiv && limiteSpawn < 100)
         {
 
             Vector3 randomPos = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); // spawn autour du core sur la tile
             Instantiate(prefabIndiv, transform.position + randomPos, Quaternion.identity, GameObject.Find("Units").transform);
 
-         
+
             limiteSpawn++;
         }
 
 
+
     }
-
-
-
 
 
 
