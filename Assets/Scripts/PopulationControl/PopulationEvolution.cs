@@ -248,43 +248,63 @@ public class PopulationEvolution : TimeDependent
 
         }
 
+        //------------------------Detection des sprites sur la tuile---------------------------------
+
+        Vector3 corePosition = map.WorldToCell(this.transform.position);
+
+        var gameObjectsIndivSprite = GameObject.FindGameObjectsWithTag("IndivSprite"); //cherche les objets avec le tag IndivSprite
+        var indivSpriteNumber = new List<Object>();
+
+
+        foreach (GameObject obj in gameObjectsIndivSprite)
+        {
+            Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<Transform>().position);
+
+            if (spriteTransform == corePosition) //stock les sprites sur la tuile       
+            {
+                indivSpriteNumber.Add(obj);
+            }
+        }
+
+        //-------------------------Animation Sonneur deplacements ------------------------------------
+       // var limiteMovement = 0 ;
+       // foreach(GameObject obj in indivSpriteNumber)
+       // {
+        //    if(limiteMovement <= emmigrationEffective["NW"])
+         //   {
+         //       var rb = obj.GetComponent<Rigidbody2D>();
+         //       rb.MovePosition(obj.transform.position + map.CellToWorld(new Vector3Int(-1,0,0)));
+
+         //   }
+
+       // }
+        
 
 
 
         //--------------------------Spawn de sprites Sonneur ----------------------------------------
 
-        Vector3 corePosition = map.WorldToCell(this.transform.position);
-
-        var gameObjects = GameObject.FindGameObjectsWithTag("IndivSprite"); //cherche les objets avec le tag IndivSprite et les supprime 
-
-
-
-        foreach (GameObject obj in gameObjects)
+        var limiteDelete = indivSpriteNumber.Count - nIndiv;
+        foreach (GameObject obj in indivSpriteNumber)
         {
-            Vector3 spriteTransform = map.WorldToCell(obj.GetComponent<Transform>().position);
-
-
-
-
-            if (spriteTransform == corePosition) //supprime les sprites sur la case du core        //PAS PARFAIT: FAIRE UN SPAWN ET DESPAWN DIFFERENCIE
-            {
-                Object.Destroy(obj);
-
+            if(nIndiv < limiteDelete)
+            { 
+                Destroy(obj);
+                limiteDelete--;
             }
-
-
-
         }
 
-        //Random pos
-        limite = 1;
-        while (limite < nIndiv / 1) //1 sprite pour 10 individus
+        var limiteSpawn = indivSpriteNumber.Count;
+        while(limiteSpawn < nIndiv && limiteSpawn < 100)
         {
-            Vector3 randomPos = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); // spawn autour du core sur la tile
 
+            Vector3 randomPos = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), 0); // spawn autour du core sur la tile
             Instantiate(prefabIndiv, transform.position + randomPos, Quaternion.identity, GameObject.Find("Units").transform);
-            limite++;
+
+         
+            limiteSpawn++;
         }
+
 
     }
 

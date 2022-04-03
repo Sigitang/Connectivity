@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tiles:
   - {fileID: 11400000, guid: bfe91ac2f336bc04aaf500aa291772cd, type: 2}
-  Kmax: 25
+  Kmax: 10
   permeability: 0.7
   reproductionFactor: 0.95
